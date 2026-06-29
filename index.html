@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System Annotation — 交友 App</title>
+<style>
+  :root {
+    --brand: #5B5FEE;
+    --green: #3DC97A;
+    --black: #111111;
+    --text-secondary: #888888;
+    --border: #E5E5EA;
+    --surface: #F5F5F8;
+    --white: #FFFFFF;
+    --error: #FF3B30;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-pill: 999px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, 'Inter', sans-serif;
+    background: #FAFAFA;
+    color: var(--black);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ── Layout ── */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 220px;
+    height: 100vh;
+    background: var(--white);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 24px 0;
+    z-index: 100;
+  }
+
+  .sidebar-logo {
+    padding: 0 20px 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 12px;
+  }
+  .sidebar-logo h1 { font-size: 14px; font-weight: 600; color: var(--black); }
+  .sidebar-logo p { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+  .nav-section { padding: 4px 0; }
+  .nav-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    padding: 8px 20px 4px;
+  }
+  .nav-item {
+    display: block;
+    padding: 6px 20px;
+    font-size: 13px;
+    color: var(--black);
+    text-decoration: none;
+    border-radius: 0;
+    transition: background 0.15s;
+  }
+  .nav-item:hover { background: var(--surface); }
+  .nav-item.active { color: var(--brand); font-weight: 500; background: #F0F0FF; }
+
+  .main {
+    margin-left: 220px;
+    padding: 48px 48px 80px;
+    max-width: 960px;
+  }
+
+  /* ── Section ── */
+  .page-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--black);
+    margin-bottom: 6px;
+  }
+  .page-subtitle {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-bottom: 48px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section { margin-bottom: 64px; }
+  .section-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── Token Grid ── */
+  .token-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .token-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .token-swatch { height: 56px; }
+  .token-info { padding: 10px 12px; }
+  .token-name { font-size: 12px; font-weight: 600; color: var(--black); }
+  .token-hex { font-size: 11px; color: var(--text-secondary); font-family: 'SF Mono', monospace; margin-top: 2px; }
+  .token-usage { font-size: 11px; color: var(--text-secondary); margin-top: 4px; }
+
+  /* ── Type Scale ── */
+  .type-table { width: 100%; border-collapse: collapse; }
+  .type-table th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    padding: 8px 12px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .type-table td {
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .type-table tr:last-child td { border-bottom: none; }
+  .type-sample { color: var(--black); }
+  .type-spec { font-size: 11px; color: var(--text-secondary); font-family: 'SF Mono', monospace; }
+  .type-usage-tag {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: var(--radius-pill);
+    background: var(--surface);
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+
+  /* ── Spacing ── */
+  .spacing-list { display: flex; flex-direction: column; gap: 2px; }
+  .spacing-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+  .spacing-bar-wrap { width: 160px; flex-shrink: 0; }
+  .spacing-bar { height: 8px; background: var(--brand); border-radius: 4px; opacity: 0.25; }
+  .spacing-bar.filled { opacity: 1; }
+  .spacing-name { flex: 1; font-size: 13px; font-weight: 500; color: var(--black); }
+  .spacing-desc { flex: 2; font-size: 12px; color: var(--text-secondary); }
+  .spacing-val { font-size: 13px; font-weight: 600; color: var(--brand); font-family: 'SF Mono', monospace; min-width: 40px; text-align: right; }
+
+  /* ── Component Cards ── */
+  .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 700px) { .comp-grid { grid-template-columns: 1fr; } }
+
+  .comp-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .comp-preview {
+    padding: 24px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 96px;
+  }
+  .comp-body { padding: 16px; }
+  .comp-name { font-size: 13px; font-weight: 600; color: var(--black); margin-bottom: 6px; }
+  .comp-path { font-size: 11px; color: var(--brand); font-family: 'SF Mono', monospace; margin-bottom: 8px; }
+  .comp-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px; }
+
+  .meta-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+  .meta-item { display: flex; gap: 8px; align-items: flex-start; }
+  .meta-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-secondary);
+    min-width: 60px;
+    padding-top: 1px;
+  }
+  .meta-value { font-size: 12px; color: var(--black); line-height: 1.5; }
+
+  .status-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .status-pill {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border);
+    color: var(--black);
+    background: var(--white);
+  }
+  .status-pill.active { background: #F0F0FF; border-color: var(--brand); color: var(--brand); }
+
+  /* ── Preview Components ── */
+  .preview-btn-green {
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: var(--radius-pill);
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: default;
+  }
+  .preview-btn-black {
+    background: #000;
+    color: white;
+    border: none;
+    border-radius: var(--radius-pill);
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: default;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .apple-icon { width: 14px; height: 14px; background: white; border-radius: 2px; }
+  .preview-icon-btn {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    cursor: default;
+  }
+  .preview-text-link {
+    color: var(--brand);
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: underline;
+    cursor: default;
+  }
+  .preview-find-btn {
+    width: 88px; height: 88px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--brand);
+    box-shadow: 0 0 0 3px #FF6B9D, 0 0 0 6px #FFB347;
+  }
+  .preview-nav-bar {
+    width: 100%;
+    height: 44px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .preview-tab-bar {
+    width: 100%;
+    height: 49px;
+    background: white;
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--border);
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    display: flex;
+    align-items: center;
+  }
+  .tab-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    font-size: 10px;
+    color: var(--text-secondary);
+  }
+  .tab-item.sel { color: var(--brand); }
+  .tab-icon { font-size: 18px; }
+  .preview-avatar {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--brand);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .preview-user-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 8px 12px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+  .preview-profile-card {
+    width: 140px;
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .preview-profile-img { width: 100%; height: 80px; background: #C8C8D8; }
+  .preview-profile-body { padding: 8px 10px; }
+  .preview-bubble-sent {
+    background: var(--brand);
+    color: white;
+    border-radius: 16px 16px 4px 16px;
+    padding: 8px 12px;
+    font-size: 13px;
+    max-width: 180px;
+    margin-left: auto;
+  }
+  .preview-bubble-recv {
+    background: var(--surface);
+    color: var(--black);
+    border-radius: 16px 16px 16px 4px;
+    padding: 8px 12px;
+    font-size: 13px;
+    max-width: 180px;
+  }
+  .preview-input-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 8px 12px;
+  }
+  .preview-input-field {
+    flex: 1;
+    background: var(--surface);
+    border-radius: var(--radius-pill);
+    padding: 6px 12px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .preview-send { width: 28px; height: 28px; background: var(--brand); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; }
+  .preview-banner {
+    width: 100%;
+    background: var(--brand);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+  }
+  .preview-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--surface);
+    border-radius: var(--radius-pill);
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--black);
+  }
+  .preview-chip.sel { background: var(--brand); color: white; }
+  .preview-text-field {
+    width: 100%;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-align: left;
+  }
+  .preview-text-field.focus { border-color: var(--brand); border-width: 2px; }
+  .preview-text-field.error { border-color: var(--error); border-width: 2px; }
+  .preview-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 0;
+  }
+  .preview-empty-icon { width: 48px; height: 48px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border); }
+  .preview-toast {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #111;
+    color: white;
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+    font-size: 13px;
+    width: 100%;
+  }
+  .toast-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+
+  /* ── When to Use ── */
+  .when-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+  .when-card {
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--black);
+  }
+  .when-card .emoji { font-size: 14px; margin-bottom: 4px; display: block; }
+  .when-card strong { font-size: 11px; display: block; margin-bottom: 2px; }
+
+  /* ── Utility ── */
+  .tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: var(--radius-pill);
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+  .tag-blue { background: #E8EAFF; color: var(--brand); }
+  .tag-green { background: #E3F9ED; color: #1A7A45; }
+  .tag-gray { background: var(--surface); color: var(--text-secondary); border: 1px solid var(--border); }
+  .tag-red { background: #FFE5E5; color: var(--error); }
+
+  .divider { height: 1px; background: var(--border); margin: 32px 0; }
+
+  .callout {
+    background: #F0F0FF;
+    border-left: 3px solid var(--brand);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--black);
+    margin: 16px 0;
+  }
+  .callout strong { color: var(--brand); }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <h1>Design System</h1>
+    <p>交友 App · PM 使用手冊</p>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">基礎</div>
+    <a href="#colors" class="nav-item">顏色系統</a>
+    <a href="#typography" class="nav-item">文字樣式</a>
+    <a href="#spacing" class="nav-item">間距規格</a>
+    <a href="#radius" class="nav-item">圓角規格</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">元件</div>
+    <a href="#buttons" class="nav-item">按鈕類</a>
+    <a href="#navigation" class="nav-item">導航類</a>
+    <a href="#profile" class="nav-item">個人資料類</a>
+    <a href="#chat" class="nav-item">聊天類</a>
+    <a href="#discovery" class="nav-item">探索類</a>
+    <a href="#forms" class="nav-item">表單類</a>
+    <a href="#feedback" class="nav-item">狀態回饋類</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">參考</div>
+    <a href="#status-guide" class="nav-item">Status 使用指南</a>
+    <a href="#dos-donts" class="nav-item">Dos &amp; Don'ts</a>
+  </div>
+</nav>
+
+<!-- Main -->
+<main class="main">
+  <h1 class="page-title">Design System Annotation</h1>
+  <p class="page-subtitle">給 PM 看的元件說明手冊 · 每個元件的用途、使用時機、規格與狀態一次說清楚</p>
+
+  <!-- ────────────────── COLORS ────────────────── -->
+  <section class="section" id="colors">
+    <h2 class="section-title">顏色系統 · Colors</h2>
+    <div class="callout">
+      <strong>PM 要知道的事：</strong>這些是全 App 唯一允許使用的顏色。新的 UI 需求如果現有顏色不夠用，要跟設計師討論後才能新增 Token，不要隨意使用沒有定義的顏色。
+    </div>
+    <div class="token-grid">
+      <div class="token-card">
+        <div class="token-swatch" style="background:#5B5FEE"></div>
+        <div class="token-info">
+          <div class="token-name">brand/primary</div>
+          <div class="token-hex">#5B5FEE</div>
+          <div class="token-usage">主品牌色 · 主要按鈕、連結、選取狀態</div>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#3DC97A"></div>
+        <div class="token-info">
+          <div class="token-name">accent/green</div>
+          <div class="token-hex">#3DC97A</div>
+          <div class="token-usage">行動 CTA · 主要號召按鈕（Find New People 等）</div>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#FFFFFF;border-top:1px solid #E5E5EA"></div>
+        <div class="token-info">
+          <div class="token-name">surface/primary</div>
+          <div class="token-hex">#FFFFFF</div>
+          <div class="token-usage">主背景 · 所有頁面底色</div>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#F5F5F8"></div>
+        <div class="token-info">
+          <div class="token-name">surface/secondary</div>
+          <div class="token-hex">#F5F5F8</div>
+          <div class="token-usage">卡片底色 · 輸入框底色 · Chip 背景</div>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#111111"></div>
+        <div class="token-info">
+          <div class="token-name">text/primary</div>
+          <div class="token-hex">#111111</div>
+          <div class="token-usage">主要文字 · 標題、名稱、重要資訊</div>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#888888"></div>
+        <div class="token-info">
+          <div class="token-name">text/secondary</div>
+          <div class="token-hex">#888888</div>
+          <div class="token-usage">次要文字 · 說明文字、placeholder、距離等輔助資訊</div>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#E5E5EA"></div>
+        <div class="token-info">
+          <div class="token-name">border/default</div>
+          <div class="token-hex">#E5E5EA</div>
+          <div class="token-usage">邊框 · 分隔線 · 輸入框外框</div>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:linear-gradient(135deg,#FF6B9D,#FFB347,#5B5FEE,#3DC97A)"></div>
+        <div class="token-info">
+          <div class="token-name">gradient/rainbow</div>
+          <div class="token-hex">多色漸層</div>
+          <div class="token-usage">Find 按鈕光暈 · 限 Find Button 元件專用</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────────────── TYPOGRAPHY ────────────────── -->
+  <section class="section" id="typography">
+    <h2 class="section-title">文字樣式 · Typography</h2>
+    <div class="callout">
+      <strong>PM 要知道的事：</strong>字型在 Penpot 用 Inter，工程師實作 iOS 時改為 SF Pro（系統預設）。文案改動時需確認字數不超出元件容許範圍——尤其按鈕文字最好控制在 4–8 個中文字或 10–16 個英文字母以內。
+    </div>
+    <table class="type-table">
+      <thead>
+        <tr>
+          <th style="width:30%">樣式名稱</th>
+          <th style="width:25%">預覽</th>
+          <th style="width:20%">規格</th>
+          <th style="width:25%">使用時機</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tag tag-blue">display/logo</span></td>
+          <td><span class="type-sample" style="font-size:24px;font-weight:700;letter-spacing:-0.5px">Honk</span></td>
+          <td><span class="type-spec">28pt · Bold<br>tracking -0.5</span></td>
+          <td><span class="type-usage-tag">登入頁 Logo</span></td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-blue">heading/nav-title</span></td>
+          <td><span class="type-sample" style="font-size:20px;font-weight:700">Meet</span></td>
+          <td><span class="type-spec">22pt · Bold</span></td>
+          <td><span class="type-usage-tag">頁面標題（Nav Bar 中央）</span></td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-blue">text/section-header</span></td>
+          <td><span class="type-sample" style="font-size:17px;font-weight:500">Today's Top Picks</span></td>
+          <td><span class="type-spec">17pt · Medium</span></td>
+          <td><span class="type-usage-tag">區塊標題、用戶姓名、卡片標題</span></td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-blue">text/body</span></td>
+          <td><span class="type-sample" style="font-size:15px;color:#888">Your personalized matches</span></td>
+          <td><span class="type-spec">15pt · Regular<br>color: #888888</span></td>
+          <td><span class="type-usage-tag">說明文字、副標、輔助資訊</span></td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-blue">text/tab-label</span></td>
+          <td><span class="type-sample" style="font-size:13px;font-weight:500">Text &nbsp; Talk</span></td>
+          <td><span class="type-spec">13pt · Medium</span></td>
+          <td><span class="type-usage-tag">Tab 標籤、模式選擇</span></td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-blue">text/caption</span></td>
+          <td><span class="type-sample" style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.5px;color:#888">SEE ALL</span></td>
+          <td><span class="type-spec">11pt · Medium<br>uppercase<br>tracking 0.5</span></td>
+          <td><span class="type-usage-tag">「See All」連結、法律文字、輔助標籤</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ────────────────── SPACING ────────────────── -->
+  <section class="section" id="spacing">
+    <h2 class="section-title">間距規格 · Spacing</h2>
+    <div class="callout">
+      <strong>PM 要知道的事：</strong>這些間距數值是固定的，不能任意調整。如果你畫 Wireframe 或做說明簡報，請用這些數值標注，方便設計師和工程師對齊。
+    </div>
+    <div class="spacing-list">
+      <div class="spacing-row">
+        <span class="spacing-name">Screen 水平邊距</span>
+        <div class="spacing-bar-wrap"><div class="spacing-bar filled" style="width:96px"></div></div>
+        <span class="spacing-desc">頁面左右兩側留白，所有內容不超出此範圍</span>
+        <span class="spacing-val">24pt</span>
+      </div>
+      <div class="spacing-row">
+        <span class="spacing-name">頁頂留白</span>
+        <div class="spacing-bar-wrap"><div class="spacing-bar filled" style="width:64px"></div></div>
+        <span class="spacing-desc">Nav Bar 下方到第一個內容元素的距離</span>
+        <span class="spacing-val">16pt</span>
+      </div>
+      <div class="spacing-row">
+        <span class="spacing-name">區塊間距</span>
+        <div class="spacing-bar-wrap"><div class="spacing-bar filled" style="width:80px"></div></div>
+        <span class="spacing-desc">不同功能區塊之間的間距（如 Top Picks 和 Explore Interests 之間）</span>
+        <span class="spacing-val">20pt</span>
+      </div>
+      <div class="spacing-row">
+        <span class="spacing-name">卡片內距</span>
+        <div class="spacing-bar-wrap"><div class="spacing-bar filled" style="width:56px"></div></div>
+        <span class="spacing-desc">卡片內容距離邊框的距離</span>
+        <span class="spacing-val">14pt</span>
+      </div>
+      <div class="spacing-row">
+        <span class="spacing-name">Avatar → 文字</span>
+        <div class="spacing-bar-wrap"><div class="spacing-bar filled" style="width:40px"></div></div>
+        <span class="spacing-desc">頭像和右側姓名文字的水平間距</span>
+        <span class="spacing-val">10pt</span>
+      </div>
+      <div class="spacing-row">
+        <span class="spacing-name">Find 按鈕尺寸</span>
+        <div class="spacing-bar-wrap"><div class="spacing-bar filled" style="width:120px"></div></div>
+        <span class="spacing-desc">Meet 頁面中央大按鈕直徑</span>
+        <span class="spacing-val">120pt</span>
+      </div>
+      <div class="spacing-row">
+        <span class="spacing-name">Tab Bar 高度</span>
+        <div class="spacing-bar-wrap"><div class="spacing-bar filled" style="width:80px"></div></div>
+        <span class="spacing-desc">底部導航列高度（不含 iOS Safe Area）</span>
+        <span class="spacing-val">49pt</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────────────── CORNER RADIUS ────────────────── -->
+  <section class="section" id="radius">
+    <h2 class="section-title">圓角規格 · Corner Radius</h2>
+    <div class="token-grid" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr))">
+      <div class="token-card" style="text-align:center;padding:16px">
+        <div style="width:56px;height:56px;border-radius:50%;background:#E8EAFF;margin:0 auto 10px"></div>
+        <div class="token-name">Avatar</div>
+        <div class="token-hex">50%（圓形）</div>
+        <div class="token-usage">所有頭像</div>
+      </div>
+      <div class="token-card" style="text-align:center;padding:16px">
+        <div style="width:100px;height:36px;border-radius:18px;background:#E8EAFF;margin:0 auto 10px"></div>
+        <div class="token-name">按鈕（膠囊）</div>
+        <div class="token-hex">22–25pt</div>
+        <div class="token-usage">CTA 按鈕、Back Button</div>
+      </div>
+      <div class="token-card" style="text-align:center;padding:16px">
+        <div style="width:80px;height:48px;border-radius:16px;background:#E8EAFF;margin:0 auto 10px"></div>
+        <div class="token-name">卡片 / 橫幅</div>
+        <div class="token-hex">16pt</div>
+        <div class="token-usage">Profile Card、Top Pick Banner</div>
+      </div>
+      <div class="token-card" style="text-align:center;padding:16px">
+        <div style="width:80px;height:40px;border-radius:12px;background:#E8EAFF;margin:0 auto 10px"></div>
+        <div class="token-name">輸入框 / Toast</div>
+        <div class="token-hex">12pt</div>
+        <div class="token-usage">Text Field、Toast 通知</div>
+      </div>
+      <div class="token-card" style="text-align:center;padding:16px">
+        <div style="width:64px;height:32px;border-radius:20px;background:#E8EAFF;margin:0 auto 10px"></div>
+        <div class="token-name">Chip（膠囊）</div>
+        <div class="token-hex">20pt</div>
+        <div class="token-usage">Interest Chip、Profile Badge</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ────────────────── BUTTONS ────────────────── -->
+  <section class="section" id="buttons">
+    <h2 class="section-title">按鈕類 · Buttons &amp; Actions</h2>
+
+    <div class="comp-grid">
+
+      <div class="comp-card">
+        <div class="comp-preview">
+          <button class="preview-btn-green">Find New People</button>
+        </div>
+        <div class="comp-body">
+          <div class="comp-name">主要 CTA 按鈕（綠色）</div>
+          <div class="comp-path">buttons/cta-green</div>
+          <div class="comp-desc">全 App 最重要的行動按鈕，用來引導用戶做關鍵操作。顏色醒目，每個畫面只能出現一次。</div>
+          <div class="meta-row">
+            <div class="meta-item"><span class="meta-label">尺寸</span><span class="meta-value">343 × 44pt · 圓角 22pt</span></div>
+            <div class="meta-item"><span class="meta-label">使用時機</span><span class="meta-value">空狀態頁的「Find New People」、Discover 頁底部 CTA</span></div>
+            <div class="meta-item"><span class="meta-label">注意</span><span class="meta-value">每個畫面只放一個。文案用動詞開頭（Find / Start / Join）</span></div>
+          </div>
+          <div class="status-list">
+            <span class="status-pill active">default</span>
+            <span class="status-pill">disabled</span>
+            <span class="status-pill">pressed</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-preview">
+          <button class="preview-btn-black"><span class="apple-icon"></span>Sign in with Apple</button>
+        </div>
+        <div class="comp-body">
+          <div class="comp-name">Apple 登入按鈕</div>
+          <div class="comp-path">buttons/cta-black</div>
+          <div class="comp-desc">登入頁專用。Apple 規定必須使用黑色底白字的官方樣式，文案固定為「Sign in with Apple」，不可修改。</div>
+          <div class="meta-row">
+            <div class="meta-item"><span class="meta-label">尺寸</span><span class="meta-value">343 × 50pt · 圓角 25pt</span></div>
+            <div class="meta-item"><span class="meta-label">使用時機</span><span class="meta-value">登入 / 註冊頁面，固定出現</span></div>
+            <div class="meta-item"><span class="meta-label">注意</span><span class="meta-value">Apple HIG 規定，文案和顏色都不能改</span></div>
+          </div>
+          <div class="status-list">
+            <span class="status-pill active">default</span>
+            <span class="status-pill">pressed</span>
+            <span class="status-pill">disabled</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-preview" style="gap:12px;flex-direction:row">
+          <div class="preview-icon-btn">☰</div>
+          <div class="preview-icon-btn">⚙</div>
+          <div class="preview-icon-btn">♡</div>
+        </div>
+        <div class="comp-body">
+          <div class="comp-name">圖示按鈕</div>
+          <div class="comp-path">buttons/icon-button</div>
+          <div class="comp-desc">Nav Bar 右側的功能按鈕。只有圖示沒有文字，適合次要操作，讓主要內容區域保持乾淨。</div>
+          <div class="meta-row">
+            <div class="meta-item"><span class="meta-label">尺寸</span><span class="meta-value">40 × 40pt · 圓形點擊區域</span></div>
+            <div class="meta-item"><span class="meta-label">使用時機</span><span class="meta-value">Nav Bar 右側（設定、通知、更多選項）</span></div>
+            <div class="meta-item"><span class="meta-label">注意</span><span class="meta-value">每個 Nav Bar 最多放 2 個，圖示用 SF Symbols</span></div>
+          </div>
+          <div class="status-list">
+            <span class="status-pill active">default</span>
+            <span class="status-pill">pressed</span>
+            <span class="status-pill">disabled</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-preview">
+          <span class="preview-text-link">See All →</span>
+        </div>
+        <div class="comp-body">
+          <div class="comp-name">文字連結</div>
+          <div class="comp-path">buttons/text-link</div>
+          <div class="comp-desc">次要操作用的文字連結，不佔空間。通常放在區塊標題右側，讓用戶進入完整列表頁。</div>
+          <div class="meta-row">
+            <div class="meta-item"><span class="meta-label">使用時機</span><span class="meta-value">「See All」「Skip」「Forgot Password?」</span></div>
+            <div class="meta-item"><span class="meta-label">注意</span><span class="meta-value">同一行不要放超過一個，文案要說清楚跳去哪裡</span></div>
+          </div>
+          <div class="status-list">
+            <span class="status-pill active">default</span>
+            <span class="status-pill">pressed</span>
+            <span class="status-pill">disabled</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-preview">
+          <div class="preview-find-btn">Find</div>
+        </div>
+        <div class="comp-body">
+          <div class="comp-name">Find 大按鈕</div>
+          <div class="comp-path">buttons/find-button</div>
+          <div class="comp-desc">Meet 頁面的視覺核心。彩虹光暈傳達「探索、驚喜」的感受。用戶點擊後進入配對流程，是整個 App 最重要的互動節點。</div>
+          <div class="meta-row">
+            <div class="meta-item"><span class="meta-label">尺寸</span><span class="meta-value">120 × 120pt · 圓形</span></div>
+            <div class="meta-item"><span class="meta-label">使用時機</span><span class="meta-value">Meet 頁面置中，全 App 只出現一次</span></div>
+            <div class="meta-item"><span class="meta-label">注意</span><span class="meta-value">loading 狀態下光暈旋轉，工程師用 SwiftUI 動畫實作</span></div>
+          </div>
+          <div class="status-list">
+            <span class="status-pill active">default</span>
+            <span class="status-pill">pressed</span>
+            <span class="status-pill">loading</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ────────────────── NAVIGATION ────────────────── -->
+  <section class="section" id="navigation">
+    <h2 class="section-title">導航類 · Navigation</h2>
+    <div class="comp-grid">
+
+      <div class="comp-card">
+        <div class="comp-preview">
+          <div class="preview-nav-bar" style="width:100%">
+            <span style="font-size:13px;color:#5B5FEE">← Back</span>
+            <span style="font-size:15px;font-weight:600">Discover</span>
+            <span style="font-size:18px;color:#888">⚙ ⋯</span>
+          </div>
+        </div>
+        <div class="comp-body">
+          <div class="comp-name">頂部導航列</div>
+          <div class="comp-path">nav/top-bar</div>
+          <div class="comp-desc">每個頁面頂部的導航欄，固定顯示頁面標題和操作按鈕。用戶靠這個知道自己在哪個頁面。</div>
+          <div class="meta-row">
+            <div class="meta-item"><span class="meta-label">尺寸</span><span class="meta-value">393 × 44pt（全寬）</span></div>
+            <div class="meta-item"><span class="meta-label">左側</span><span class="meta-value">返回按鈕（子頁面才顯示）</span></div>
+            <div class="meta-item"><span class="meta-label">右側</span><span class="meta-value">最多 2 個 icon button</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-preview" style="padding:0">
+          <div class="preview-tab-bar" style="width:100%;border-radius:0">
+            <div class="tab-item"><span class="tab-icon">💬</span>Chats</div>
+            <div class="tab-item sel"><span class="tab-icon" style="color:#5B5FEE">🔍</span><span>Meet</span></div>
+            <div class="tab-item"><span class="tab-icon">🧭</span>Discover</div>
+          </div>
+        </div>
+        <div class="comp-body">
+          <div class="comp-name">底部導航列</div>
+          <div class="comp-path">nav/tab-bar</div>
+          <div class="comp-desc">App 三個主要區域的切換入口，固定在畫面底部。選中的 tab 顯示品牌色，讓用戶隨時知道當前位置。</div>
+          <div class="meta-row">
+            <div class="meta-item"><span class="meta-label">尺寸</span><span class="meta-value">393 × 49pt（+ iOS Safe Area）</span></div>
+            <div class="meta-item"><span class="meta-label">Tab 數量</span><span class="meta-value">固定 3 個：Chats / Meet / Discover</span></div>
+            <div class="meta-item"><span class="meta-label">注意</span><span class="meta-value">新功能不要隨意新增 Tab，Tab 超過 5 個體驗會很差</span></div>
+          </div>
+          <div class="status-list">
+            <span class="status-pill active">selected</span>
+            <span class="status-pill">unselected</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ────────────────── PROFILE ────────────────── -->
+  <section class="section" id="profile">
+    <h2 class="section-title">個人資料類 · Profile &amp; User</h2>
+    <div class="comp-grid">
+
+      <div class="comp-card">
+        <div class="comp-preview" style="gap:16px;flex-direction:row">
+          <div class="preview-avatar" style="width:32px;height:32px;font-size:12px">AB</div>
+          <div class="preview-avatar">AB</div>
+          <div class="preview-avatar" style="width:80px;height:80px;font-size:22px">AB</div>
+        </div>
+        <div class="comp-body">
+          <div class="comp-name">用戶頭像</div>
+          <div class="comp-path">profile/avatar/sm · md · lg</div>
+          <div class="comp-desc">顯示用戶照片或縮寫的圓形元件，三種尺寸對應不同場景使用。沒有上傳照片時顯示名字縮寫。</div>
+          <div class="meta-row">
+            <div class="meta-item"><span class="meta-label">sm (32pt)</span><span class="meta-value">Tab Bar、密集列表</span></div>
+            <div class="meta-item"><span class="meta-label">md (40pt)</span><span class="meta-value">User Row、聊天列表、Nav Bar</span></div>
+            <div class="meta-item"><span class="meta-label">lg (80pt)</span><span class="meta-value">個人資料頁、配對成功彈窗</span></div>
+          </div>
+          <div class="status-list">
+            <span class="status-pill active">initials</span>
+            <span class="status-pill">image</span>
+            <span class="status-pill">online</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-preview">
+          <div class="preview-user-row">
+            <div class="preview-avatar" style="width:40px;height:40px;font-size:14px;flex-shrink:0">JD</div>
+            <div>
+              <div style="font-size:14px;font-weight:600">Jordan</div>
+              <div style="font-size:12px;color:#888">Any Pronoun</div>
+            </div>
+            <div style="margin-left:auto;font-size:18px;color:#888">···</div>
+          </div>
+        </div>
+        <div class="comp-body">
+          <div class="comp-name">用戶列表行</div>
+          <div class="comp-path">user-row</div>
+          <div class="comp-desc">顯示單一用戶資訊的橫向列，包含頭像、姓名、副標和操作選項。是聊天列表和配對列表的基本單位。</div>
+          <div class="meta-row">
+            <div class="meta-item"><span class="meta-label">使用時機</span><span class="meta-value">聊天列表、配對列表、好友列表</span></div>
+            <div class="meta-item"><span class="meta-label">左側綠條</span><span class="meta-value">unread 狀態時才顯示</span></div>
+          </div>
+          <div class="status-list">
+            <span class="status-pill active">default</span>
+            <span class="status-pill">unread</span>
+            <span class="status-pill">active</span>
+            <span class="status-pill">muted</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-preview">
+          <div class="preview-profile-card">
+            <div class="preview-profile-img"></div>
+            <div class="preview-profile-body">
+              <div style="font-size:13px;font-weight:600;margin-bottom:2px">Alex · 24</div>
+              <div style="font-size:11px;color:#888;margin-bottom:6px">2km away</div>
+              <div style="display:flex;gap:4px;flex-wrap:wrap">
+                <span style="font-size:10px;background:#F5F5F8;padding:2px 6px;border-radius:10px">Music</span>
+                <span style="font-size:10px;background:#F5F5F8;padding:2px 6px;border-radius:10px">Travel</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="comp-body">
+          <div class="comp-name">個人資料卡</div>
+          <div class="comp-path">profile/card</div>
+          <div class="comp-desc">在 Discover 頁展示潛在配對對象的摘要卡片，用戶掃一眼就能快速判斷是否感興趣。</div>
+          <div class="meta-row">
+            <div class="meta-item"><span class="meta-label">尺寸</span><span class="meta-value">160 × 200pt</span></div>
+            <div class="meta-item"><span class="meta-label">使用時機</span><span class="meta-value">Discover 頁格狀排列，2 欄顯示</span></div>
+            <div class="meta-item"><span class="meta-label">內容上限</span><span class="meta-value">最多顯示 2 個 Interest Chip</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ────────────────── CHAT ────────────────── -->
+  <section class="section" id="chat">
+    <h2 class="section-title">聊天類 · Chat &amp; Messaging</h2>
+    <div class="comp-grid">
+
+      <div class="comp-card">
+        <div class="comp-preview" style="flex-direction:column;gap:8px;align-items:flex-end">
+          <div class="preview-bubble-sent">Hey, how are you?</div>
+          <div class="preview-bubble-sent" style="opacity:0.5">Sending...</div>
+        </div>
+        <div class="comp-body">
+          <div class="comp-name">發送訊息氣泡</div>
+          <div class="comp-path">chat/bubble-sent</div>
+          <div class="comp-desc">用戶自己發出的訊息，品牌藍紫色底、靠右對齊。左上角、右上角、左下角大圓角，右下角小圓角，模擬真實對話氣泡形狀。</div>
+          <div class="meta-row">
+            <div class="meta-item"><span class="meta-label">最大寬度</span><span class="meta-value">260pt（避免訊息橫跨整行）</span></div>
+            <div class="meta-item"><span class="meta-label">對齊</span><span class="meta-value">靠右</span></div>
+          </div>
+          <div class="status-list">
+            <span class="status-pill active">default</span>
+            <span class="status-pill">sending</span>
+            <span class="status-pill">failed</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-preview" style="flex-direction:column;gap:8px;align-items:flex-start">
+          <div class="preview-bubble-recv">Hi! Doing well, you?</div>
+          <div class="preview-bubble-recv" style="border-left:3px solid #5B5FEE">Just arrived! 👋</div>
+        </div>
+        <div class="comp-body">
+          <div class="comp-name">接收訊息氣泡</div>
+          <div class="comp-path">chat/bubble-received</div>
+          <div class="comp-desc">對方發來的訊息，淺灰底、靠左對齊。new 狀態會在左側顯示品牌色細豎條，提示這是最新未讀訊息。</div>
+          <div class="meta-row">
+            <div class="meta-item"><span class="meta-label">最大寬度</span><span class="meta-value">260pt</span></div>
+            <div class="meta-item"><span class="meta-label">對齊</span><span class="meta-value">靠左</span></div>
+          </div>
+          <div class="status-list">
+            <span class="status-pill active">default</span>
+            <span class="status-pill">new</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-preview">
+          <div class="preview-input-bar">
+            <div class="preview-input-field">Type a message…</div>
+            <div class="preview-send">↑</div>
+          </div>
+        </div>
+        <div class="comp-body">
+          <div class="comp-name">訊息輸入列</div>
+          <div class="comp-path">chat/input-bar</div>
+          <div class="comp-desc">聊天頁底部的輸入區域。用戶開始輸入時送出按鈕變成品牌色，視覺上提示「可以送出了」。</div>
+          <div class="meta-row">
+            <div class="meta-item"><span class="meta-label">尺寸</span><span class="meta-value">393 × 56pt（全寬）</span></div>
+            <div class="meta-item"><span class="meta-label">注意</span><span class="meta-value">鍵盤彈出時整個 input-bar 要跟著上移，工程師用 KeyboardAvoidingView 處理</span></div>
+          </div>
+          <div class="status-list">
+            <span class="status-pill active">empty</span>
+            <span class="status-pill">typing</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ────────────────── DISCOVERY ────────────────── -->
+  <section class="section" id="discovery">
+    <h2 class="section-title">探索類 · Discovery</h2>
+    <div class="comp-grid">
+
+      <div class="comp-card">
+        <div class="comp-preview">
+          <div class="preview-banner">
+            <div class="preview-avatar" style="width:36px;height:36px;font-size:13px;flex-shrink:0">AB</div>
+            <div>
+              <div style="font-size:14px;font-weight:600;margin-bottom:2px">Today's Top Picks</div>
+              <div style="font-size:12px;opacity:0.75">Your daily matches are ready.</div>
+            </div>
+          </div>
+        </div>
+        <div class="comp-body">
+          <div class="comp-name">每日推薦橫幅</div>
+          <div class="comp-path">discovery/top-pick-banner</div>
+          <div class="comp-desc">Discover 頁頂部的品牌色橫幅，每日更新，主動告知用戶有新的推薦配對。點擊後進入配對列表。</div>
+          <div class="meta-row">
+            <div class="meta-item"><span class="meta-label">尺寸</span><span class="meta-value">全寬（螢幕寬度 - 48pt）× 72pt</span></div>
+            <div class="meta-item"><span class="meta-label">使用時機</span><span class="meta-value">Discover 頁最頂部，每頁只有一個</span></div>
+            <div class="meta-item"><span class="meta-label">文案規則</span><span class="meta-value">標題固定，說明文字可依推薦數量動態調整</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-preview" style="gap:8px;flex-wrap:wrap;justify-content:center">
+          <span class="preview-chip">🎵 Music</span>
+          <span class="preview-chip sel">✈️ Travel</span>
+          <span class="preview-chip">🎮 Gaming</span>
+          <span class="preview-chip">📚 Reading</span>
+        </div>
+        <div class="comp-body">
+          <div class="comp-name">興趣標籤</div>
+          <div class="comp-path">interest-chip</div>
+          <div class="comp-desc">代表用戶興趣的可點選標籤，可多選。selected 狀態（品牌紫底白字）代表已選取或與自己興趣相符。</div>
+          <div class="meta-row">
+            <div class="meta-item"><span class="meta-label">使用時機</span><span class="meta-value">Discover 頁興趣篩選、Profile 編輯頁興趣設定</span></div>
+            <div class="meta-item"><span class="meta-label">文案規則</span><span class="meta-value">興趣名稱最多 8 個字，可加 emoji 前綴</span></div>
+            <div class="meta-item"><span class="meta-label">容量上限</span><span class="meta-value">一列橫向最多顯示 4–5 個，超出需橫向 scroll</span></div>
+          </div>
+          <div class="status-list">
+            <span class="status-pill active">default</span>
+            <span class="status-pill">selected</span>
+            <span class="status-pill">disabled</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-preview" style="gap:12px;flex-direction:row">
+          <div style="background:#F5F5F8;border-radius:12px;padding:10px 16px;font-size:13px;font-weight:500;color:#888">Text</div>
+          <div style="background:white;border-radius:12px;padding:10px 16px;font-size:13px;font-weight:500;color:#111;box-shadow:0 2px 8px rgba(0,0,0,0.1)">Talk</div>
+        </div>
+        <div class="comp-body">
+          <div class="comp-name">模式選擇器</div>
+          <div class="comp-path">mode-selector</div>
+          <div class="comp-desc">Meet 頁面讓用戶選擇配對溝通方式：文字聊天（Text）或語音（Talk）。選中項目有白色背景和陰影浮起效果。</div>
+          <div class="meta-row">
+            <div class="meta-item"><span class="meta-label">使用時機</span><span class="meta-value">Meet 頁面，Find 按鈕上方</span></div>
+            <div class="meta-item"><span class="meta-label">注意</span><span class="meta-value">同時只能選一種，選完後點 Find 按鈕才生效</span></div>
+          </div>
+          <div class="status-list">
+            <span class="status-pill active">unselected</span>
+            <span class="status-pill">selected</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ────────────────── FORMS ────────────────── -->
+  <section class="section" id="forms">
+    <h2 class="section-title">表單類 · Forms &amp; Input</h2>
+    <div class="comp-grid">
+
+      <div class="comp-card">
+        <div class="comp-preview" style="flex-direction:column;gap:8px;width:100%">
+          <div class="preview-text-field">Your name</div>
+          <div class="preview-text-field focus">Jordan</div>
+          <div class="preview-text-field error">
+            Invalid input
+            <div style="font-size:11px;color:#FF3B30;margin-top:4px">This field is required</div>
+          </div>
+        </div>
+        <div class="comp-body">
+          <div class="comp-name">單行文字輸入框</div>
+          <div class="comp-path">input/text-field</div>
+          <div class="comp-desc">Onboarding 和設定頁面的標準輸入框。focused 狀態顯示品牌色藍紫邊框；error 狀態顯示紅色邊框加錯誤說明文字。</div>
+          <div class="meta-row">
+            <div class="meta-item"><span class="meta-label">尺寸</span><span class="meta-value">343 × 56pt · 圓角 12pt</span></div>
+            <div class="meta-item"><span class="meta-label">錯誤文字</span><span class="meta-value">框下方，11pt · 紅色 #FF3B30</span></div>
+          </div>
+          <div class="status-list">
+            <span class="status-pill active">default</span>
+            <span class="status-pill">focused</span>
+            <span class="status-pill">filled</span>
+            <span class="status-pill">error</span>
+            <span class="status-pill">disabled</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-preview">
+          <div class="preview-text-field" style="display:flex;align-items:center;gap:0;padding:0;overflow:hidden">
+            <div style="padding:0 14px;font-size:14px;font-weight:500;border-right:1px solid #E5E5EA;height:100%;display:flex;align-items:center">+1</div>
+            <div style="padding:0 14px;font-size:14px;color:#888">Phone number</div>
+          </div>
+        </div>
+        <div class="comp-body">
+          <div class="comp-name">電話號碼輸入框</div>
+          <div class="comp-path">input/phone-field</div>
+          <div class="comp-desc">登入頁專用的電話號碼輸入欄，左側有國碼選擇區。用戶先選國碼再輸入號碼，降低填寫錯誤率。</div>
+          <div class="meta-row">
+            <div class="meta-item"><span class="meta-label">左側區域</span><span class="meta-value">60pt · 可點擊彈出國碼列表</span></div>
+            <div class="meta-item"><span class="meta-label">使用時機</span><span class="meta-value">登入 / 註冊頁唯一的輸入框</span></div>
+          </div>
+          <div class="status-list">
+            <span class="status-pill active">default</span>
+            <span class="status-pill">focused</span>
+            <span class="status-pill">error</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ────────────────── FEEDBACK ────────────────── -->
+  <section class="section" id="feedback">
+    <h2 class="section-title">狀態回饋類 · Feedback &amp; Status</h2>
+    <div class="comp-grid">
+
+      <div class="comp-card">
+        <div class="comp-preview">
+          <div class="preview-empty">
+            <div class="preview-empty-icon"></div>
+            <div style="font-size:14px;font-weight:600;color:#111">No chats yet</div>
+            <div style="font-size:12px;color:#888;text-align:center">When you chat with new people,<br>they'll show up here.</div>
+            <button class="preview-btn-green" style="font-size:13px;padding:8px 20px;margin-top:4px">Find New People</button>
+          </div>
+        </div>
+        <div class="comp-body">
+          <div class="comp-name">空狀態</div>
+          <div class="comp-path">feedback/empty-state</div>
+          <div class="comp-desc">當頁面沒有內容時顯示的引導元件。不只是「沒東西」的提示，更是引導用戶採取第一步行動的機會。</div>
+          <div class="meta-row">
+            <div class="meta-item"><span class="meta-label">使用時機</span><span class="meta-value">Chats 列表為空、無配對結果、搜尋無結果</span></div>
+            <div class="meta-item"><span class="meta-label">文案規則</span><span class="meta-value">標題說明「是什麼」，副標說明「怎麼做」，CTA 引導行動</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-preview" style="flex-direction:column;gap:8px;width:100%">
+          <div class="preview-toast"><span class="toast-dot"></span>Profile updated</div>
+          <div class="preview-toast"><span class="toast-dot" style="background:#FF3B30"></span>Something went wrong</div>
+          <div class="preview-toast"><span class="toast-dot" style="background:#5B5FEE"></span>New match found!</div>
+        </div>
+        <div class="comp-body">
+          <div class="comp-name">Toast 通知</div>
+          <div class="comp-path">feedback/toast</div>
+          <div class="comp-desc">操作完成後從畫面底部短暫彈出的通知，約 2–3 秒後自動消失。三種語意：success（綠）、error（紅）、info（藍紫）。</div>
+          <div class="meta-row">
+            <div class="meta-item"><span class="meta-label">使用時機</span><span class="meta-value">儲存成功、操作失敗、有新配對</span></div>
+            <div class="meta-item"><span class="meta-label">文案規則</span><span class="meta-value">10 字以內，說明發生了什麼，不加「！」</span></div>
+            <div class="meta-item"><span class="meta-label">注意</span><span class="meta-value">不能同時顯示多個 Toast，要排隊</span></div>
+          </div>
+          <div class="status-list">
+            <span class="status-pill active">success</span>
+            <span class="status-pill">error</span>
+            <span class="status-pill">info</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ────────────────── STATUS GUIDE ────────────────── -->
+  <section class="section" id="status-guide">
+    <h2 class="section-title">Status 使用指南</h2>
+    <div class="callout">
+      <strong>給 PM 的說明：</strong>每個元件都有多種狀態（Status），代表用戶互動後的視覺變化。以下說明每種狀態的觸發條件，方便你在 PRD 或驗收時對齊。
+    </div>
+    <table class="type-table">
+      <thead>
+        <tr>
+          <th>狀態名稱</th>
+          <th>視覺變化</th>
+          <th>觸發條件</th>
+          <th>適用元件</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tag tag-blue">default</span></td>
+          <td>原始外觀</td>
+          <td>頁面剛載入，用戶尚未互動</td>
+          <td>所有元件</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-gray">pressed</span></td>
+          <td>顏色加深或縮小</td>
+          <td>用戶手指按下（touchDown），放開後恢復</td>
+          <td>所有按鈕</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-gray">disabled</span></td>
+          <td>灰色，無法點擊</td>
+          <td>條件未滿足（如表單未填完）才允許操作</td>
+          <td>按鈕、輸入框</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-blue">focused</span></td>
+          <td>邊框變品牌色（2pt）</td>
+          <td>用戶點擊輸入框，鍵盤彈出</td>
+          <td>所有輸入框</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-red">error</span></td>
+          <td>邊框變紅 + 錯誤提示文字</td>
+          <td>用戶送出但驗證不通過；格式錯誤</td>
+          <td>輸入框</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-green">selected</span></td>
+          <td>品牌色填滿</td>
+          <td>用戶主動點擊選取</td>
+          <td>Chip、Mode Selector</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-gray">unread</span></td>
+          <td>左側綠色豎條</td>
+          <td>對方有新訊息尚未閱讀</td>
+          <td>User Row</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-gray">loading</span></td>
+          <td>外觀淡化，光暈旋轉動畫</td>
+          <td>點擊後等待伺服器回應</td>
+          <td>Find Button</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-red">failed</span></td>
+          <td>氣泡變淡紅 + 驚嘆號 icon</td>
+          <td>訊息送出失敗（網路問題）</td>
+          <td>Chat Bubble Sent</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ────────────────── DOS DONTS ────────────────── -->
+  <section class="section" id="dos-donts">
+    <h2 class="section-title">Dos &amp; Don'ts · PM 使用元件的注意事項</h2>
+    <div class="when-grid" style="grid-template-columns:1fr 1fr;gap:12px">
+      <div class="when-card" style="background:#E3F9ED;border:1px solid #A8E6C1">
+        <strong style="color:#1A7A45">✓ Do</strong>
+        每個畫面只放一個綠色 CTA 按鈕，視覺上的主角只能有一個。
+      </div>
+      <div class="when-card" style="background:#FFE5E5;border:1px solid #FFBBB8">
+        <strong style="color:#CC0000">✗ Don't</strong>
+        同一個畫面放兩個綠色按鈕，用戶會不知道先點哪個。
+      </div>
+      <div class="when-card" style="background:#E3F9ED;border:1px solid #A8E6C1">
+        <strong style="color:#1A7A45">✓ Do</strong>
+        按鈕文案用動詞開頭：「Find People」「Start Chat」「Update Profile」
+      </div>
+      <div class="when-card" style="background:#FFE5E5;border:1px solid #FFBBB8">
+        <strong style="color:#CC0000">✗ Don't</strong>
+        按鈕文案用名詞或模糊詞：「OK」「Submit」「Click Here」
+      </div>
+      <div class="when-card" style="background:#E3F9ED;border:1px solid #A8E6C1">
+        <strong style="color:#1A7A45">✓ Do</strong>
+        空狀態頁提供明確行動 CTA，引導用戶做第一步。
+      </div>
+      <div class="when-card" style="background:#FFE5E5;border:1px solid #FFBBB8">
+        <strong style="color:#CC0000">✗ Don't</strong>
+        空狀態只顯示「No results」或「Nothing here yet」，沒有後續引導。
+      </div>
+      <div class="when-card" style="background:#E3F9ED;border:1px solid #A8E6C1">
+        <strong style="color:#1A7A45">✓ Do</strong>
+        Toast 訊息 10 字以內，說清楚發生了什麼事。
+      </div>
+      <div class="when-card" style="background:#FFE5E5;border:1px solid #FFBBB8">
+        <strong style="color:#CC0000">✗ Don't</strong>
+        Toast 顯示技術錯誤訊息如「Error 500: Internal Server Error」
+      </div>
+      <div class="when-card" style="background:#E3F9ED;border:1px solid #A8E6C1">
+        <strong style="color:#1A7A45">✓ Do</strong>
+        使用現有元件的 status 變體來表達不同狀態。
+      </div>
+      <div class="when-card" style="background:#FFE5E5;border:1px solid #FFBBB8">
+        <strong style="color:#CC0000">✗ Don't</strong>
+        隨意改元件顏色或自己創新的視覺狀態，會破壞一致性。
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  const links = document.querySelectorAll('.nav-item');
+  const sections = document.querySelectorAll('section[id]');
+  window.addEventListener('scroll', () => {
+    let cur = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 80) cur = s.id;
+    });
+    links.forEach(l => {
+      l.classList.toggle('active', l.getAttribute('href') === '#' + cur);
+    });
+  });
+</script>
+</body>
+</html>
